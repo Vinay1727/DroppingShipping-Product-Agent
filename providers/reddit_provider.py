@@ -1,16 +1,24 @@
 from typing import Optional
 
-from ..config import settings
-from ..models import ProviderResult
+import requests
+
+from product_agent.config import settings
+from product_agent.models import ProviderResult
 from .base_provider import BaseProvider
 
 
 class RedditProvider(BaseProvider):
+    priority = 1
+    display_name = "Reddit"
+    USER_AGENT = "ProductAgent/1.0 (by /u/product_agent)"
+
     def _do_fetch(self, product_name: str) -> ProviderResult:
         if settings.REDDIT_CLIENT_ID and settings.REDDIT_CLIENT_SECRET:
-            return self._fetch_via_praw(product_name)
+            result = self._fetch_via_praw(product_name)
+            if result.success:
+                return result
 
-        return self._fetch_via_pushshift(product_name)
+        return self._fetch_via_json_api(product_name)
 
     def _fetch_via_praw(self, product_name: str) -> ProviderResult:
         try:
@@ -33,7 +41,6 @@ class RedditProvider(BaseProvider):
                 subreddits.add(submission.subreddit.display_name)
                 comment_count += submission.num_comments
 
-            avg_sentiment = 0.5
             is_trending = post_count > 10
 
             return ProviderResult(
@@ -42,7 +49,7 @@ class RedditProvider(BaseProvider):
                 data={
                     "post_count_30d": post_count,
                     "comment_count_30d": comment_count,
-                    "avg_sentiment": avg_sentiment,
+                    "avg_sentiment": 0.5,
                     "subreddits": list(subreddits),
                     "is_trending": is_trending,
                 },
@@ -55,25 +62,28 @@ class RedditProvider(BaseProvider):
                 error=f"PRAW error: {e}",
             )
 
-    def _fetch_via_pushshift(self, product_name: str) -> ProviderResult:
+    def _fetch_via_json_api(self, product_name: str) -> ProviderResult:
         try:
-            import requests
-
+            headers = {"User-Agent": self.USER_AGENT}
             params = {
                 "q": product_name,
-                "size": 100,
-                "sort": "created_utc",
-                "order": "desc",
-                "subreddit": "all",
-                "after": "30d",
+                "sort": "new",
+                "t": "month",
+                "limit": 100,
+                "restrict_sr": "off",
             }
+
             resp = requests.get(
-                "https://api.pushshift.io/reddit/search/submission",
+                "https://www.reddit.com/r/all/search.json",
                 params=params,
+                headers=headers,
                 timeout=15,
             )
+            resp.raise_for_status()
             data = resp.json()
-            posts = data.get("data", [])
+
+            children = data.get("data", {}).get("children", [])
+            posts = [c["data"] for c in children if c.get("kind") == "t3"]
 
             post_count = len(posts)
             subreddits = list({p.get("subreddit", "") for p in posts if p.get("subreddit")})
@@ -96,5 +106,5 @@ class RedditProvider(BaseProvider):
             return ProviderResult(
                 source="RedditProvider",
                 success=False,
-                error=f"Pushshift error: {e}",
+                error=f"Reddit JSON API error: {e}",
             )

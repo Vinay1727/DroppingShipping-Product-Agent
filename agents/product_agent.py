@@ -1,29 +1,35 @@
 from typing import Dict, Optional
 from datetime import datetime
 
-from ..config import settings
-from ..models import ProductInput, EngineResult, FinalReport, ProviderResult
-from ..providers import GoogleTrendsProvider, AmazonProvider, RedditProvider
-from ..engines.trend_engine import TrendEngine
-from ..engines.demand_engine import DemandEngine
-from ..engines.margin_engine import MarginEngine
-from ..engines.seasonality_engine import SeasonalityEngine
-from ..engines.intent_engine import IntentEngine
-from ..engines.competition_engine import CompetitionEngine
-from ..engines.content_engine import ContentEngine
-from ..engines.supplier_engine import SupplierEngine
-from ..engines.review_engine import ReviewEngine
-from ..engines.logistics_engine import LogisticsEngine
-from ..engines.scoring_engine import ScoringEngine
+from product_agent.config import settings
+from product_agent.models import ProductInput, EngineResult, FinalReport, HealthReport, ProviderResult
+from product_agent.providers import GoogleTrendsProvider, AmazonProvider, RedditProvider, SearchProvider
+from product_agent.engines.trend_engine import TrendEngine
+from product_agent.engines.demand_engine import DemandEngine
+from product_agent.engines.margin_engine import MarginEngine
+from product_agent.engines.seasonality_engine import SeasonalityEngine
+from product_agent.engines.intent_engine import IntentEngine
+from product_agent.engines.competition_engine import CompetitionEngine
+from product_agent.engines.content_engine import ContentEngine
+from product_agent.engines.supplier_engine import SupplierEngine
+from product_agent.engines.review_engine import ReviewEngine
+from product_agent.engines.logistics_engine import LogisticsEngine
+from product_agent.engines.scoring_engine import ScoringEngine
 
 
 class ProductAgent:
+    PROVIDER_CONFIG = [
+        ("google_trends", GoogleTrendsProvider, {"lookback_days": settings.TREND_LOOKBACK_DAYS}),
+        ("reddit", RedditProvider, {}),
+        ("search", SearchProvider, {}),
+        ("amazon", AmazonProvider, {}),
+    ]
+
     def __init__(self):
-        self.providers: Dict[str, object] = {
-            "google_trends": GoogleTrendsProvider(lookback_days=settings.TREND_LOOKBACK_DAYS),
-            "amazon": AmazonProvider(),
-            "reddit": RedditProvider(),
-        }
+        self.providers: Dict[str, object] = {}
+        for name, cls, kwargs in self.PROVIDER_CONFIG:
+            self.providers[name] = cls(**kwargs)
+
         self.trend_engine = TrendEngine(lookback_days=settings.TREND_LOOKBACK_DAYS)
         self.demand_engine = DemandEngine()
         self.margin_engine = MarginEngine()
@@ -38,6 +44,7 @@ class ProductAgent:
 
     def analyze(self, product: ProductInput) -> FinalReport:
         provider_data = self._run_providers(product.product_name)
+        health = self._build_health_report()
 
         engine_results: Dict[str, EngineResult] = {}
 
@@ -71,7 +78,7 @@ class ProductAgent:
         logistics_result = self.logistics_engine.analyze(product)
         engine_results["logistics"] = logistics_result
 
-        report = self.scoring_engine.score(engine_results, product.product_name)
+        report = self.scoring_engine.score(engine_results, product.product_name, health=health)
         report.generated_at = datetime.now().isoformat()
 
         return report
@@ -88,3 +95,33 @@ class ProductAgent:
                     error=str(e),
                 )
         return results
+
+    def _build_health_report(self) -> HealthReport:
+        provider_healths = []
+        for name, provider in self.providers.items():
+            health = provider.check_health()
+            provider_healths.append(health)
+
+        priority1 = [p for p in provider_healths if p.priority == 1]
+        priority1_working = sum(1 for p in priority1 if p.status == "working")
+        priority1_total = len(priority1)
+
+        if priority1_total > 0:
+            coverage = (priority1_working / priority1_total) * 100.0
+        else:
+            coverage = 0.0
+
+        if coverage >= 100:
+            trust = "High"
+        elif coverage >= 66:
+            trust = "Medium"
+        elif coverage >= 33:
+            trust = "Low"
+        else:
+            trust = "Very Low"
+
+        return HealthReport(
+            providers=provider_healths,
+            real_data_coverage=round(coverage, 0),
+            trust_level=trust,
+        )

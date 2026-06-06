@@ -1,8 +1,6 @@
 import warnings
 from typing import Optional
 
-import numpy as np
-
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 try:
@@ -14,12 +12,14 @@ except Exception:
     TrendReq = None
     ResponseError = Exception
 
-from ..config import settings
-from ..models import ProviderResult
+from product_agent.config import settings
+from product_agent.models import ProviderResult
 from .base_provider import BaseProvider
 
 
 class GoogleTrendsProvider(BaseProvider):
+    priority = 1
+    display_name = "Google Trends"
     WORKING_TIMEFRAMES = ["today 5-y", "today 3-m", "today 1-m"]
 
     def __init__(self, lookback_days: int = 180):
@@ -95,25 +95,19 @@ class GoogleTrendsProvider(BaseProvider):
         denom = max(ninety, thirty)
         stability = min(ninety, thirty) / denom if denom > 0 else 0.0
 
-        if total_points >= 2:
-            x = np.arange(len(series))
-            slope = float(np.polyfit(x, series.values, 1)[0])
-        else:
-            slope = 0.0
-
-        if slope > 0.5:
-            direction = "rising"
-        elif slope < -0.5:
-            direction = "declining"
-        else:
-            direction = "stable"
-
         if total_points >= 60:
             recent = float(series.tail(30).mean())
             older = float(series.tail(60).head(30).mean())
             momentum = (recent - older) / (older + 1)
         else:
             momentum = 0.0
+
+        if momentum > 0.1:
+            direction = "rising"
+        elif momentum < -0.1:
+            direction = "declining"
+        else:
+            direction = "stable"
 
         return ProviderResult(
             source="GoogleTrendsProvider",

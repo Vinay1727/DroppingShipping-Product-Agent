@@ -2,13 +2,13 @@ import time
 import logging
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Optional
+from typing import ClassVar, Optional
 
 import requests
 from cachetools import TTLCache
 
-from ..config import settings
-from ..models import ProviderResult
+from product_agent.config import settings
+from product_agent.models import ProviderHealth, ProviderResult
 
 
 logger = logging.getLogger(__name__)
@@ -17,6 +17,9 @@ logger = logging.getLogger(__name__)
 class BaseProvider(ABC):
     CACHE_TTL = settings.PROVIDER_CACHE_TTL
     _caches: dict = {}
+
+    priority: ClassVar[int] = 0
+    display_name: ClassVar[str] = ""
 
     @classmethod
     def _get_cache(cls) -> TTLCache:
@@ -28,6 +31,23 @@ class BaseProvider(ABC):
     @abstractmethod
     def _do_fetch(self, product_name: str) -> ProviderResult:
         pass
+
+    def check_health(self) -> ProviderHealth:
+        try:
+            result = self._do_fetch("health check")
+            return ProviderHealth(
+                name=self.display_name or self.__class__.__name__,
+                priority=self.priority,
+                status="working" if result.success else "disabled",
+                error=result.error if not result.success else None,
+            )
+        except Exception as e:
+            return ProviderHealth(
+                name=self.display_name or self.__class__.__name__,
+                priority=self.priority,
+                status="error",
+                error=str(e),
+            )
 
     def fetch(self, product_name: str) -> ProviderResult:
         cache = self._get_cache()

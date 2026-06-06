@@ -47,6 +47,17 @@ def print_report(report):
     print(f"  decision: {decision}")
     print()
 
+    if report.health:
+        print("  Provider Health")
+        print("  ---------------")
+        for p in report.health.providers:
+            icon = "✓" if p.status == "working" else "✗"
+            print(f"  {icon} {p.name}: {p.status.title()}")
+        print()
+        print(f"  Real Data Coverage: {report.health.real_data_coverage:.0f}%")
+        print(f"  Trust Level: {report.health.trust_level}")
+        print()
+
 
 def save_report(report, filename=None):
     folder = settings.REPORT_OUTPUT_FOLDER
@@ -65,6 +76,7 @@ def save_report(report, filename=None):
         "decision": report.decision,
         "summary": report.summary,
         "generated_at": report.generated_at,
+        "health": report.health.model_dump() if report.health else None,
         "engine_scores": {
             k: {
                 "score": v.score,

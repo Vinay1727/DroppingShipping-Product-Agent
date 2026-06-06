@@ -14,8 +14,8 @@ except Exception:
     TrendReq = None
     ResponseError = Exception
 
-from ..config import settings
-from ..models import EngineResult, TrendMetrics, ProviderResult
+from product_agent.config import settings
+from product_agent.models import EngineResult, TrendMetrics, ProviderResult
 
 
 class TrendEngine:
@@ -125,19 +125,6 @@ class TrendEngine:
         denom = max(ninety, thirty)
         stability = min(ninety, thirty) / denom if denom > 0 else 0.0
 
-        if total_points >= 2:
-            x = np.arange(len(series))
-            slope = np.polyfit(x, series.values, 1)[0]
-        else:
-            slope = 0.0
-
-        if slope > 0.5:
-            direction = "rising"
-        elif slope < -0.5:
-            direction = "declining"
-        else:
-            direction = "stable"
-
         if total_points >= 60:
             recent = series.tail(30).mean()
             older = series.tail(60).head(30).mean()
@@ -145,35 +132,67 @@ class TrendEngine:
         else:
             momentum = 0.0
 
+        if momentum > 0.1:
+            direction = "rising"
+        elif momentum < -0.1:
+            direction = "declining"
+        else:
+            direction = "stable"
+
         return TrendMetrics(
-            seven_day_avg=seven,
-            thirty_day_avg=thirty,
-            ninety_day_avg=ninety,
-            one_eighty_day_avg=one_eighty,
+            seven_day_avg=float(seven),
+            thirty_day_avg=float(thirty),
+            ninety_day_avg=float(ninety),
+            one_eighty_day_avg=float(one_eighty),
             direction=direction,
-            momentum=momentum,
-            stability=stability,
+            momentum=float(momentum),
+            stability=float(stability),
         )
 
     def _calculate_score(self, metrics: TrendMetrics) -> float:
-        base = metrics.stability * 20.0
+        level = metrics.thirty_day_avg
+        if level >= 80:
+            level_score = 8.0
+        elif level >= 50:
+            level_score = 6.5
+        elif level >= 30:
+            level_score = 5.0
+        elif level >= 15:
+            level_score = 3.0
+        elif level >= 5:
+            level_score = 1.5
+        else:
+            level_score = 0.0
 
         if metrics.direction == "rising":
-            base += 3.0
+            dir_score = 5.0
         elif metrics.direction == "declining":
-            base -= 5.0
+            dir_score = 0.0
+        else:
+            dir_score = 2.5
 
-        if metrics.momentum > 0.05:
-            base += 2.0
-        elif metrics.momentum < -0.05:
-            base -= 2.0
+        if metrics.thirty_day_avg > 0:
+            spike = metrics.seven_day_avg / metrics.thirty_day_avg
+            if spike >= 1.5:
+                spike_score = 4.0
+            elif spike >= 1.2:
+                spike_score = 3.0
+            elif spike >= 0.8:
+                spike_score = 2.0
+            elif spike >= 0.5:
+                spike_score = 1.0
+            else:
+                spike_score = 0.0
+        else:
+            spike_score = 0.0
 
-        if metrics.seven_day_avg > metrics.thirty_day_avg:
-            base += 2.0
-        elif metrics.seven_day_avg < metrics.thirty_day_avg * 0.5:
-            base -= 3.0
+        if level >= 5:
+            cons_score = metrics.stability * 3.0
+        else:
+            cons_score = 0.0
 
-        return max(0.0, min(20.0, base))
+        score = level_score + dir_score + spike_score + cons_score
+        return max(0.0, min(20.0, score))
 
     def _fallback_result(self, reason: str) -> EngineResult:
         return EngineResult(

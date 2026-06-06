@@ -1,6 +1,6 @@
 from typing import Optional
 
-from ..models import EngineResult, ProductInput, ProviderResult
+from product_agent.models import EngineResult, ProductInput, ProviderResult
 
 
 class ReviewEngine:
@@ -13,13 +13,25 @@ class ReviewEngine:
             amazon_data = None
             if provider_data:
                 amz = provider_data.get("amazon")
-                if amz and amz.success and amz.data:
+                if amz and amz.success and amz.data and amz.data.get("available", False):
                     amazon_data = amz.data
 
             if amazon_data:
                 return self._score_from_amazon(amazon_data)
 
-            return self._score_from_keywords(product.product_name)
+            return EngineResult(
+                score=1.0,
+                max_score=3.0,
+                confidence=0.2,
+                details={
+                    "review_quality": "unknown",
+                    "avg_rating": 0,
+                    "total_reviews": 0,
+                    "data_source": "no_data",
+                    "sources_confirmed": 0,
+                    "sources_checked": 1,
+                },
+            )
 
         except Exception as e:
             return EngineResult(
@@ -81,89 +93,6 @@ class ReviewEngine:
                 "sources_checked": 1,
             },
         )
-
-    def _score_from_keywords(self, product_name: str) -> EngineResult:
-        count_score = self._score_review_count(product_name)
-        rating_score = self._score_average_rating(product_name)
-        recent_score = self._score_recent_reviews(product_name)
-
-        raw = (count_score + rating_score + recent_score) / 3.0
-        score = raw
-        label = self._label(raw)
-        confidence = 0.4 + (raw / 3.0) * 0.5
-
-        return EngineResult(
-            score=round(min(score, 3.0), 2),
-            max_score=3.0,
-            confidence=round(min(confidence, 0.95), 2),
-            details={
-                "review_count_score": count_score,
-                "average_rating_score": rating_score,
-                "recent_reviews_score": recent_score,
-                "review_quality": label,
-                "data_source": "keyword_heuristic",
-                "sources_confirmed": 0,
-                "sources_checked": 1,
-            },
-        )
-
-    def _score_review_count(self, product_name: str) -> int:
-        name_lower = product_name.lower()
-        high_review = [
-            "electronic", "gadget", "device", "tool", "appliance",
-            "beauty", "skin", "hair", "makeup", "fitness",
-            "kitchen", "home", "pet", "toy", "game",
-            "headphone", "phone", "charger", "cable",
-        ]
-        low_review = [
-            "consumable", "food", "drink", "snack", "beverage",
-            "battery", "bulk", "refill", "disposable", "label",
-            "sticker", "tag", "envelope", "bag",
-        ]
-        for cat in high_review:
-            if cat in name_lower:
-                return 3
-        for cat in low_review:
-            if cat in name_lower:
-                return 0
-        return 2
-
-    def _score_average_rating(self, product_name: str) -> int:
-        name_lower = product_name.lower()
-        high_quality = [
-            "premium", "pro", "professional", "advanced", "organic",
-            "natural", "vegan", "hypoallergenic", "dermatologist",
-            "medical", "surgical", "clinical", "therapeutic",
-        ]
-        low_quality = [
-            "cheap", "budget", "basic", "generic", "replacement",
-            "compatible", "universal", "economy", "value",
-        ]
-        for t in high_quality:
-            if t in name_lower:
-                return 3
-        for t in low_quality:
-            if t in name_lower:
-                return 1
-        return 2
-
-    def _score_recent_reviews(self, product_name: str) -> int:
-        name_lower = product_name.lower()
-        trending = [
-            "trending", "viral", "new", "2024", "2025", "2026",
-            "popular", "hot", "latest", "recent", "upgraded",
-        ]
-        stagnant = [
-            "classic", "traditional", "retro", "vintage", "old school",
-            "original", "standard", "basic",
-        ]
-        for t in trending:
-            if t in name_lower:
-                return 3
-        for t in stagnant:
-            if t in name_lower:
-                return 1
-        return 2
 
     def _label(self, raw_score: float) -> str:
         if raw_score >= 2.5:

@@ -1,5 +1,5 @@
-from ..config import settings
-from ..models import EngineResult, ProductInput
+from product_agent.config import settings
+from product_agent.models import EngineResult, ProductInput
 
 
 class ContentEngine:

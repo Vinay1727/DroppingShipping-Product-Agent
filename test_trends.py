@@ -7,7 +7,6 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 import sys
 from pytrends.request import TrendReq
 from pytrends.exceptions import ResponseError
-import numpy as np
 
 
 def fetch_trends(product_name: str):
@@ -47,20 +46,21 @@ def fetch_trends(product_name: str):
     print(f"  90d avg:      {ninety:.2f}")
     print(f"  180d avg:     {one_eighty:.2f}")
 
-    if total_points >= 2:
-        x = np.arange(len(series))
-        slope = float(np.polyfit(x, series.values, 1)[0])
+    if total_points >= 60:
+        recent = float(series.tail(30).mean())
+        older = float(series.tail(60).head(30).mean())
+        momentum = (recent - older) / (older + 1)
     else:
-        slope = 0.0
+        momentum = 0.0
 
-    if slope > 0.5:
+    if momentum > 0.1:
         direction = "rising"
-    elif slope < -0.5:
+    elif momentum < -0.1:
         direction = "declining"
     else:
         direction = "stable"
 
-    print(f"  Direction:    {direction} (slope={slope:.4f})")
+    print(f"  Direction:    {direction} (momentum={momentum:.4f})")
 
     denom = max(ninety, thirty)
     stability = min(ninety, thirty) / denom if denom > 0 else 0.0

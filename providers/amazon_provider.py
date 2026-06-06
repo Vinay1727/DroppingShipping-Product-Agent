@@ -1,11 +1,14 @@
 from typing import Optional
 
-from ..config import settings
-from ..models import ProviderResult
+from product_agent.config import settings
+from product_agent.models import ProviderResult
 from .base_provider import BaseProvider
 
 
 class AmazonProvider(BaseProvider):
+    priority = 2
+    display_name = "Amazon"
+
     def _do_fetch(self, product_name: str) -> ProviderResult:
         serp_key = settings.SERPAPI_API_KEY
         amazon_key = settings.AMAZON_API_KEY
@@ -15,7 +18,12 @@ class AmazonProvider(BaseProvider):
         if amazon_key:
             return self._fetch_via_paapi(product_name, amazon_key)
 
-        return self._fetch_via_scrape(product_name)
+        return ProviderResult(
+            source="AmazonProvider",
+            success=False,
+            data={"available": False, "reason": "amazon provider unavailable"},
+            error="Amazon provider unavailable: no SerpAPI or PAAPI keys configured",
+        )
 
     def _fetch_via_serpapi(self, product_name: str, api_key: str) -> ProviderResult:
         try:
@@ -69,6 +77,7 @@ class AmazonProvider(BaseProvider):
                 source="AmazonProvider",
                 success=True,
                 data={
+                    "available": True,
                     "product_count": product_count,
                     "avg_price": avg_price,
                     "price_min": price_min,
@@ -128,6 +137,7 @@ class AmazonProvider(BaseProvider):
                 source="AmazonProvider",
                 success=True,
                 data={
+                    "available": True,
                     "product_count": len(items),
                     "avg_price": avg_price,
                     "price_min": price_min,
@@ -143,92 +153,4 @@ class AmazonProvider(BaseProvider):
                 source="AmazonProvider",
                 success=False,
                 error=f"PAAPI error: {e}",
-            )
-
-    def _fetch_via_scrape(self, product_name: str) -> ProviderResult:
-        try:
-            name_lower = product_name.lower()
-
-            saturated_terms = [
-                "phone", "case", "charger", "cable", "t-shirt", "shoe",
-                "headphone", "earphone", "laptop", "bag", "water bottle",
-                "mug", "pillow", "blanket", "mask", "notebook", "pen",
-                "wallet", "hat", "socks", "keychain", "sticker", "poster",
-            ]
-            niche_terms = [
-                "remover", "extractor", "organizer", "specialty", "specific",
-                "pro", "professional", "industrial", "heavy duty",
-                "attachment", "adapter", "converter", "accessory",
-                "hypoallergenic", "organic", "vegan", "natural",
-                "automatic", "smart", "adjustable", "ergonomic",
-            ]
-            premium_terms = [
-                "premium", "pro", "professional", "heavy duty", "industrial",
-                "smart", "automatic", "electric", "advanced",
-            ]
-            pet_terms = ["pet", "dog", "cat", "animal"]
-            home_terms = ["home", "kitchen", "garden", "decor", "furniture"]
-            beauty_terms = ["beauty", "hair", "skin", "makeup", "nail"]
-
-            saturated = sum(1 for t in saturated_terms if t in name_lower)
-            niche = sum(1 for t in niche_terms if t in name_lower)
-            premium = sum(1 for t in premium_terms if t in name_lower)
-            pet = sum(1 for t in pet_terms if t in name_lower)
-            home = sum(1 for t in home_terms if t in name_lower)
-            beauty = sum(1 for t in beauty_terms if t in name_lower)
-
-            if saturated >= 2 or (saturated >= 1 and niche == 0):
-                product_count = 3000 + hash(name_lower) % 2000
-                avg_rating = round(3.8 + (hash(name_lower) % 10) / 50, 2)
-                total_reviews = 5000 + hash(name_lower) % 15000
-                avg_price = round(8.0 + (hash(name_lower) % 5000) / 100, 2)
-                price_min = round(avg_price * 0.3, 2)
-                price_max = round(avg_price * 2.5, 2)
-            elif niche >= 2 or (niche >= 1 and saturated == 0):
-                product_count = 50 + hash(name_lower) % 200
-                avg_rating = round(4.0 + (hash(name_lower) % 15) / 50, 2)
-                total_reviews = 100 + hash(name_lower) % 2000
-                avg_price = round(12.0 + (hash(name_lower) % 8000) / 100, 2)
-                price_min = round(avg_price * 0.5, 2)
-                price_max = round(avg_price * 2.0, 2)
-            elif pet or home:
-                product_count = 200 + hash(name_lower) % 800
-                avg_rating = round(4.0 + (hash(name_lower) % 12) / 50, 2)
-                total_reviews = 500 + hash(name_lower) % 5000
-                avg_price = round(10.0 + (hash(name_lower) % 4000) / 100, 2)
-                price_min = round(avg_price * 0.4, 2)
-                price_max = round(avg_price * 2.2, 2)
-            else:
-                product_count = 300 + hash(name_lower) % 500
-                avg_rating = round(3.9 + (hash(name_lower) % 10) / 50, 2)
-                total_reviews = 300 + hash(name_lower) % 3000
-                avg_price = round(15.0 + (hash(name_lower) % 6000) / 100, 2)
-                price_min = round(avg_price * 0.4, 2)
-                price_max = round(avg_price * 2.0, 2)
-
-            if premium > 0:
-                avg_price = round(avg_price * 1.5, 2)
-                price_max = round(price_max * 1.3, 2)
-
-            avg_rating = min(5.0, max(1.0, avg_rating))
-
-            return ProviderResult(
-                source="AmazonProvider",
-                success=True,
-                data={
-                    "product_count": product_count,
-                    "avg_price": avg_price,
-                    "price_min": price_min,
-                    "price_max": price_max,
-                    "avg_rating": avg_rating,
-                    "total_reviews": total_reviews,
-                    "top_category": "estimated",
-                },
-            )
-
-        except Exception as e:
-            return ProviderResult(
-                source="AmazonProvider",
-                success=False,
-                error=f"Simulation error: {e}",
             )

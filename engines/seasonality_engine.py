@@ -1,4 +1,4 @@
-from ..models import EngineResult, ProductInput
+from product_agent.models import EngineResult, ProductInput
 
 
 class SeasonalityEngine:

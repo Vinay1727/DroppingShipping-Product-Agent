@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from datetime import datetime
 
 
@@ -27,6 +27,19 @@ class TrendMetrics(BaseModel):
     stability: float = 0.0
 
 
+class ProviderHealth(BaseModel):
+    name: str
+    priority: int
+    status: str
+    error: Optional[str] = None
+
+
+class HealthReport(BaseModel):
+    providers: List[ProviderHealth]
+    real_data_coverage: float
+    trust_level: str
+
+
 class FinalReport(BaseModel):
     product_name: str
     product_score: float
@@ -35,6 +48,7 @@ class FinalReport(BaseModel):
     decision: str
     engine_scores: Dict[str, EngineResult]
     summary: str
+    health: Optional[HealthReport] = None
     generated_at: str = ""
 
 

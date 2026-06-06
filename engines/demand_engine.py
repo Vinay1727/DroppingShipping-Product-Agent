@@ -1,6 +1,6 @@
 from typing import Optional
 
-from ..models import EngineResult, ProductInput, ProviderResult
+from product_agent.models import EngineResult, ProductInput, ProviderResult
 
 
 class DemandEngine:
@@ -12,14 +12,14 @@ class DemandEngine:
     ) -> EngineResult:
         try:
             google_confirmed = self._check_google_trends(trend_result, provider_data)
-            amazon_confirmed = self._check_amazon(provider_data)
             reddit_confirmed = self._check_reddit(provider_data)
+            search_confirmed = self._check_search(provider_data)
             heuristic_confirmed = self._check_heuristic(product.product_name)
 
             sources = {
                 "google_trends": google_confirmed,
-                "amazon": amazon_confirmed,
                 "reddit": reddit_confirmed,
+                "search": search_confirmed,
                 "heuristic": heuristic_confirmed,
             }
 
@@ -28,8 +28,7 @@ class DemandEngine:
 
             confidence = 0.3 + (confirmed_count / 4.0) * 0.6
 
-            has_provider_data = bool(provider_data)
-            has_real_source = amazon_confirmed or google_confirmed or reddit_confirmed
+            has_real_source = google_confirmed or reddit_confirmed or search_confirmed
 
             return EngineResult(
                 score=round(min(score, 20.0), 2),
@@ -37,8 +36,8 @@ class DemandEngine:
                 confidence=round(confidence, 2),
                 details={
                     "google_trends": google_confirmed,
-                    "amazon": amazon_confirmed,
                     "reddit": reddit_confirmed,
+                    "search": search_confirmed,
                     "heuristic": heuristic_confirmed,
                     "confirmed_sources": confirmed_count,
                     "total_sources": 4,
@@ -75,22 +74,19 @@ class DemandEngine:
 
         return False
 
-    def _check_amazon(self, provider_data: Optional[dict[str, ProviderResult]]) -> bool:
-        if provider_data:
-            amz = provider_data.get("amazon")
-            if amz and amz.success and amz.data:
-                reviews = amz.data.get("total_reviews", 0)
-                listings = amz.data.get("product_count", 0)
-                return reviews > 50 or listings > 5
-
-        return False
-
     def _check_reddit(self, provider_data: Optional[dict[str, ProviderResult]]) -> bool:
         if provider_data:
             reddit = provider_data.get("reddit")
             if reddit and reddit.success and reddit.data:
                 return reddit.data.get("post_count_30d", 0) > 0
 
+        return False
+
+    def _check_search(self, provider_data: Optional[dict[str, ProviderResult]]) -> bool:
+        if provider_data:
+            srch = provider_data.get("search")
+            if srch and srch.success and srch.data:
+                return srch.data.get("result_count", 0) > 5
         return False
 
     def _check_heuristic(self, product_name: str) -> bool:

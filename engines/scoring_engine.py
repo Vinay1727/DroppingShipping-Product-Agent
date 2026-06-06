@@ -1,6 +1,6 @@
-from typing import Dict
+from typing import Dict, Optional
 
-from ..models import EngineResult, FinalReport
+from product_agent.models import EngineResult, FinalReport, HealthReport, ProviderHealth
 
 
 class ScoringEngine:
@@ -9,7 +9,25 @@ class ScoringEngine:
         "competition", "content", "supplier", "reviews", "logistics",
     ]
 
-    def score(self, engine_results: Dict[str, EngineResult], product_name: str) -> FinalReport:
+    ENGINE_WEIGHTS = {
+        "trend": 0.20,
+        "demand": 0.20,
+        "margin": 0.15,
+        "seasonality": 0.10,
+        "intent": 0.05,
+        "competition": 0.10,
+        "content": 0.05,
+        "supplier": 0.05,
+        "reviews": 0.05,
+        "logistics": 0.05,
+    }
+
+    def score(
+        self,
+        engine_results: Dict[str, EngineResult],
+        product_name: str,
+        health: Optional[HealthReport] = None,
+    ) -> FinalReport:
         normalized_scores = {}
         total_confirmed = 0
         total_checked = 0
@@ -26,7 +44,7 @@ class ScoringEngine:
             total_checked += result.details.get("sources_checked", 0)
 
         product_score = min(raw_sum, 100.0)
-        confidence_score = (total_confirmed / total_checked * 100.0) if total_checked > 0 else 0.0
+        confidence_score = self._calculate_confidence(engine_results, health)
         survival_probability = self._calculate_survival(engine_results)
         decision = self._make_decision(product_score)
 
@@ -38,19 +56,51 @@ class ScoringEngine:
             decision=decision,
             engine_scores=engine_results,
             summary=self._generate_summary(product_score, decision, normalized_scores),
+            health=health,
             generated_at="",
         )
 
+    def _calculate_confidence(
+        self,
+        engine_results: Dict[str, EngineResult],
+        health: Optional[HealthReport] = None,
+    ) -> float:
+        if health:
+            priority1_working = sum(
+                1 for p in health.providers if p.priority == 1 and p.status == "working"
+            )
+            priority1_total = sum(
+                1 for p in health.providers if p.priority == 1
+            )
+            if priority1_total > 0:
+                return (priority1_working / priority1_total) * 100.0
+
+        total_confirmed = 0
+        total_checked = 0
+        for result in engine_results.values():
+            total_confirmed += result.details.get("sources_confirmed", 0)
+            total_checked += result.details.get("sources_checked", 0)
+        return (total_confirmed / total_checked * 100.0) if total_checked > 0 else 0.0
+
     def _calculate_survival(self, engine_results: Dict[str, EngineResult]) -> float:
-        scores = {
-            "trend": engine_results.get("trend"),
-            "demand": engine_results.get("demand"),
-            "seasonality": engine_results.get("seasonality"),
-            "intent": engine_results.get("intent"),
-        }
-        total = sum(er.score for er in scores.values() if er is not None)
-        survival = (total / 60.0) * 100.0
-        return max(5.0, min(99.0, survival))
+        total_weight = 0.0
+        weighted_score = 0.0
+        available = 0
+
+        for engine, weight in self.ENGINE_WEIGHTS.items():
+            result = engine_results.get(engine)
+            if result is None:
+                continue
+            normalized = result.score / result.max_score if result.max_score > 0 else 0
+            weighted_score += normalized * weight
+            total_weight += weight
+            available += 1
+
+        if total_weight == 0 or available == 0:
+            return 50.0
+
+        survival = (weighted_score / total_weight) * 100.0
+        return max(5.0, min(95.0, survival))
 
     def _make_decision(self, score: float) -> str:
         if score >= 90:

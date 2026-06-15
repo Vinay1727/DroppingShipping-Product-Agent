@@ -1,0 +1,212 @@
+{
+  "product_name": "covid face shield",
+  "product_score": 60.3,
+  "confidence_score": 0.0,
+  "survival_probability": 55.2,
+  "decision": "Risky",
+  "summary": "RISKY - Score: 60/100 | Strengths: margin, seasonality, content, supplier | Weaknesses: demand, reviews, logistics",
+  "generated_at": "2026-06-06T17:51:44.786688",
+  "health": {
+    "providers": [
+      {
+        "name": "Google Trends",
+        "priority": 1,
+        "status": "disabled",
+        "error": "pytrends library not installed"
+      },
+      {
+        "name": "Reddit",
+        "priority": 1,
+        "status": "disabled",
+        "error": "Reddit JSON API error: 403 Client Error: Blocked for url: https://www.reddit.com/r/all/search.json?q=health+check&sort=new&t=month&limit=100&restrict_sr=off"
+      },
+      {
+        "name": "Google Search",
+        "priority": 1,
+        "status": "disabled",
+        "error": "Google search error: No module named 'googlesearch'"
+      },
+      {
+        "name": "Amazon",
+        "priority": 2,
+        "status": "disabled",
+        "error": "Amazon provider unavailable: no SerpAPI or PAAPI keys configured"
+      }
+    ],
+    "real_data_coverage": 0.0,
+    "trust_level": "Very Low"
+  },
+  "engine_scores": {
+    "trend": {
+      "score": 10.0,
+      "max_score": 20.0,
+      "confidence": 0.3,
+      "details": {
+        "seven_day_avg": 0,
+        "thirty_day_avg": 0,
+        "ninety_day_avg": 0,
+        "one_eighty_day_avg": 0,
+        "direction": "unknown",
+        "momentum": 0,
+        "stability": 0,
+        "fallback_reason": "pytrends library not available",
+        "sources_confirmed": 0,
+        "sources_checked": 1,
+        "data_source": "fallback"
+      },
+      "error": "pytrends library not available"
+    },
+    "demand": {
+      "score": 0.0,
+      "max_score": 20.0,
+      "confidence": 0.3,
+      "details": {
+        "google_trends": false,
+        "reddit": false,
+        "search": false,
+        "heuristic": false,
+        "confirmed_sources": 0,
+        "total_sources": 4,
+        "sources_confirmed": 0,
+        "sources_checked": 4,
+        "data_source": "heuristic_only"
+      },
+      "error": null
+    },
+    "margin": {
+      "score": 15.0,
+      "max_score": 15.0,
+      "confidence": 0.85,
+      "details": {
+        "cost": 1.0,
+        "price": 10.0,
+        "profit": 9.0,
+        "margin_percent": 90.0,
+        "roi_percent": 900.0,
+        "min_margin_threshold": 60.0,
+        "meets_threshold": true,
+        "sources_confirmed": 1,
+        "sources_checked": 1
+      },
+      "error": null
+    },
+    "seasonality": {
+      "score": 10.0,
+      "max_score": 10.0,
+      "confidence": 0.9,
+      "details": {
+        "product_type": "evergreen",
+        "explanation": "Year-round demand, consistent sales potential",
+        "sources_confirmed": 1,
+        "sources_checked": 1
+      },
+      "error": null
+    },
+    "intent": {
+      "score": 5.0,
+      "max_score": 10.0,
+      "confidence": 0.6,
+      "details": {
+        "high_intent_keywords_found": 0,
+        "keywords_matched": [],
+        "intent_level": "medium intent",
+        "sources_confirmed": 1,
+        "sources_checked": 1
+      },
+      "error": null
+    },
+    "competition": {
+      "score": 5.0,
+      "max_score": 10.0,
+      "confidence": 0.3,
+      "details": {
+        "estimated_competitor_count": "unknown",
+        "marketplace_saturation": "unknown",
+        "competition_level": "unknown",
+        "sources_confirmed": 0,
+        "sources_checked": 1,
+        "data_source": "no_data"
+      },
+      "error": null
+    },
+    "content": {
+      "score": 5.0,
+      "max_score": 5.0,
+      "confidence": 0.9,
+      "details": {
+        "unique_ideas": 66,
+        "duplicate_ideas": 0,
+        "diversity_score": 1.0,
+        "categories_covered": 8,
+        "total_categories": 8,
+        "category_breakdown": {
+          "problem_solving": 6,
+          "transformation": 5,
+          "comparison": 10,
+          "tutorial": 10,
+          "reaction": 10,
+          "challenge": 10,
+          "mistakes": 10,
+          "before_after": 5
+        },
+        "sample_ideas": [
+          "Tired of dealing with covid face shield Try this instead",
+          "Stop struggling with covid face shield forever",
+          "The covid face shield problem solved in 30 seconds",
+          "How covid face shield fixes your biggest annoyance",
+          "Never deal with covid face shield again use this hack",
+          "This covid face shield solves what nothing else could",
+          "What covid face shield did to my things was shocking",
+          "Watch covid face shield transform this completely",
+          "I used covid face shield for 7 days and here is what changed",
+          "The covid face shield glow up nobody asked for"
+        ],
+        "sources_confirmed": 1,
+        "sources_checked": 1
+      },
+      "error": null
+    },
+    "supplier": {
+      "score": 8.67,
+      "max_score": 10.0,
+      "confidence": 0.83,
+      "details": {
+        "supplier_rating": 5,
+        "order_count": 4,
+        "years_active": 4,
+        "supplier_quality": "good",
+        "sources_confirmed": 1,
+        "sources_checked": 1
+      },
+      "error": null
+    },
+    "reviews": {
+      "score": 1.0,
+      "max_score": 3.0,
+      "confidence": 0.2,
+      "details": {
+        "review_quality": "unknown",
+        "avg_rating": 0,
+        "total_reviews": 0,
+        "data_source": "no_data",
+        "sources_confirmed": 0,
+        "sources_checked": 1
+      },
+      "error": null
+    },
+    "logistics": {
+      "score": 0.67,
+      "max_score": 2.0,
+      "confidence": 0.57,
+      "details": {
+        "shipping_time": 1,
+        "tracking_availability": 0,
+        "warehouse_location": 1,
+        "logistics_quality": "average",
+        "sources_confirmed": 1,
+        "sources_checked": 1
+      },
+      "error": null
+    }
+  }
+}

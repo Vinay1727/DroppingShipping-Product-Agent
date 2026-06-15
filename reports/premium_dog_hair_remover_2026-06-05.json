@@ -1,0 +1,161 @@
+{
+  "product_name": "premium dog hair remover",
+  "product_score": 73.0,
+  "confidence_score": 70.2,
+  "survival_probability": 81.1,
+  "decision": "Buy",
+  "summary": "STRONG BUY SIGNAL | Strengths: margin, seasonality, competition, content, supplier, reviews, logistics",
+  "generated_at": "2026-06-05T11:05:52.022176",
+  "engine_scores": {
+    "trend": {
+      "score": 10.0,
+      "max_score": 20.0,
+      "confidence": 0.3,
+      "details": {
+        "seven_day_avg": 0,
+        "thirty_day_avg": 0,
+        "ninety_day_avg": 0,
+        "one_eighty_day_avg": 0,
+        "direction": "unknown",
+        "momentum": 0,
+        "stability": 0,
+        "fallback_reason": "The request failed: Google returned a response with code 400"
+      },
+      "error": "The request failed: Google returned a response with code 400"
+    },
+    "demand": {
+      "score": 12.0,
+      "max_score": 20.0,
+      "confidence": 0.75,
+      "details": {
+        "google_trends": false,
+        "pinterest": true,
+        "amazon": true,
+        "reddit": true,
+        "confirmed_sources": 3,
+        "total_sources": 4
+      },
+      "error": null
+    },
+    "margin": {
+      "score": 12.0,
+      "max_score": 15.0,
+      "confidence": 0.79,
+      "details": {
+        "cost": 8.0,
+        "price": 35.0,
+        "profit": 27.0,
+        "margin_percent": 77.14,
+        "roi_percent": 337.5,
+        "min_margin_threshold": 60.0,
+        "meets_threshold": true
+      },
+      "error": null
+    },
+    "seasonality": {
+      "score": 10.0,
+      "max_score": 10.0,
+      "confidence": 0.9,
+      "details": {
+        "product_type": "evergreen",
+        "explanation": "Year-round demand, consistent sales potential"
+      },
+      "error": null
+    },
+    "intent": {
+      "score": 5.0,
+      "max_score": 10.0,
+      "confidence": 0.6,
+      "details": {
+        "high_intent_keywords_found": 0,
+        "keywords_matched": [],
+        "intent_level": "medium intent"
+      },
+      "error": null
+    },
+    "competition": {
+      "score": 10.0,
+      "max_score": 10.0,
+      "confidence": 0.85,
+      "details": {
+        "estimated_competitor_count": 15,
+        "marketplace_saturation": "low",
+        "advertising_density": "low",
+        "competition_level": "low competition"
+      },
+      "error": null
+    },
+    "content": {
+      "score": 5.0,
+      "max_score": 5.0,
+      "confidence": 0.9,
+      "details": {
+        "unique_ideas": 80,
+        "duplicate_ideas": 0,
+        "diversity_score": 1.0,
+        "categories_covered": 8,
+        "total_categories": 8,
+        "category_breakdown": {
+          "problem_solving": 10,
+          "transformation": 10,
+          "comparison": 10,
+          "tutorial": 10,
+          "reaction": 10,
+          "challenge": 10,
+          "mistakes": 10,
+          "before_after": 10
+        },
+        "sample_ideas": [
+          "Tired of dealing with premium dog hair remover Try this instead",
+          "Stop struggling with premium dog hair remover forever",
+          "The premium dog hair remover problem solved in 30 seconds",
+          "How premium dog hair remover fixes your biggest annoyance",
+          "Never deal with premium dog hair remover again use this hack",
+          "This premium dog hair remover solves what nothing else could",
+          "The real reason your premium dog hair remover isnt working and how to fix it",
+          "One simple trick to fix premium dog hair remover permanently",
+          "Why everyone with premium dog hair remover needs this solution",
+          "Stop wasting time on premium dog hair remover do this instead"
+        ]
+      },
+      "error": null
+    },
+    "supplier": {
+      "score": 8.67,
+      "max_score": 10.0,
+      "confidence": 0.83,
+      "details": {
+        "supplier_rating": 4,
+        "order_count": 5,
+        "years_active": 4,
+        "supplier_quality": "good"
+      },
+      "error": null
+    },
+    "reviews": {
+      "score": 2.67,
+      "max_score": 3.0,
+      "confidence": 0.84,
+      "details": {
+        "review_count_score": 3,
+        "average_rating_score": 3,
+        "recent_reviews_score": 2,
+        "review_quality": "excellent"
+      },
+      "error": null
+    },
+    "logistics": {
+      "score": 3.52,
+      "max_score": 5.0,
+      "confidence": 0.83,
+      "details": {
+        "shippability": 0.6,
+        "fulfillment_ease": 0.75,
+        "returns_risk": 0.8,
+        "logistics_verdict": "logistics-feasible",
+        "estimated_weight_class": "light (<1 lb)"
+      },
+      "error": null
+    }
+  }
+}

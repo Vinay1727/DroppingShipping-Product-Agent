@@ -1,0 +1,17 @@
+product_name,expected
+portable blender,BUY
+water flosser,BUY
+dog hair remover,BUY
+neck fan,BUY
+pet water bottle,BUY
+electric lighter,BUY
+car vacuum,BUY
+
+covid face shield,REJECT
+fidget spinner,REJECT
+cheap selfie stick,REJECT
+dvd cleaner,REJECT
+
+christmas tree,WATCHLIST
+halloween mask,WATCHLIST
+valentine teddy,WATCHLIST

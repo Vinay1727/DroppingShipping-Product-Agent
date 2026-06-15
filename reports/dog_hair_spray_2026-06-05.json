@@ -1,0 +1,180 @@
+{
+  "product_name": "dog hair spray",
+  "product_score": 75.7,
+  "confidence_score": 84.6,
+  "survival_probability": 61.7,
+  "decision": "Watchlist",
+  "summary": "WATCHLIST - Score: 76/100 | Strengths: margin, seasonality, competition, content, supplier, reviews | Weaknesses: logistics",
+  "generated_at": "2026-06-05T11:21:02.765425",
+  "engine_scores": {
+    "trend": {
+      "score": 10.0,
+      "max_score": 20.0,
+      "confidence": 0.3,
+      "details": {
+        "seven_day_avg": 0,
+        "thirty_day_avg": 0,
+        "ninety_day_avg": 0,
+        "one_eighty_day_avg": 0,
+        "direction": "unknown",
+        "momentum": 0,
+        "stability": 0,
+        "fallback_reason": "The request failed: Google returned a response with code 400",
+        "sources_confirmed": 0,
+        "sources_checked": 1
+      },
+      "error": "The request failed: Google returned a response with code 400"
+    },
+    "demand": {
+      "score": 12.0,
+      "max_score": 20.0,
+      "confidence": 0.75,
+      "details": {
+        "google_trends": false,
+        "pinterest": true,
+        "amazon": true,
+        "reddit": true,
+        "confirmed_sources": 3,
+        "total_sources": 4,
+        "sources_confirmed": 3,
+        "sources_checked": 4
+      },
+      "error": null
+    },
+    "margin": {
+      "score": 15.0,
+      "max_score": 15.0,
+      "confidence": 0.8,
+      "details": {
+        "cost": 7.0,
+        "price": 35.0,
+        "profit": 28.0,
+        "margin_percent": 80.0,
+        "roi_percent": 400.0,
+        "min_margin_threshold": 60.0,
+        "meets_threshold": true,
+        "sources_confirmed": 1,
+        "sources_checked": 1
+      },
+      "error": null
+    },
+    "seasonality": {
+      "score": 10.0,
+      "max_score": 10.0,
+      "confidence": 0.9,
+      "details": {
+        "product_type": "evergreen",
+        "explanation": "Year-round demand, consistent sales potential",
+        "sources_confirmed": 1,
+        "sources_checked": 1
+      },
+      "error": null
+    },
+    "intent": {
+      "score": 5.0,
+      "max_score": 10.0,
+      "confidence": 0.6,
+      "details": {
+        "high_intent_keywords_found": 0,
+        "keywords_matched": [],
+        "intent_level": "medium intent",
+        "sources_confirmed": 1,
+        "sources_checked": 1
+      },
+      "error": null
+    },
+    "competition": {
+      "score": 7.0,
+      "max_score": 10.0,
+      "confidence": 0.75,
+      "details": {
+        "estimated_competitor_count": 80,
+        "marketplace_saturation": "medium",
+        "advertising_density": "medium",
+        "competition_level": "medium competition",
+        "sources_confirmed": 1,
+        "sources_checked": 1
+      },
+      "error": null
+    },
+    "content": {
+      "score": 5.0,
+      "max_score": 5.0,
+      "confidence": 0.9,
+      "details": {
+        "unique_ideas": 76,
+        "duplicate_ideas": 0,
+        "diversity_score": 1.0,
+        "categories_covered": 8,
+        "total_categories": 8,
+        "category_breakdown": {
+          "problem_solving": 6,
+          "transformation": 10,
+          "comparison": 10,
+          "tutorial": 10,
+          "reaction": 10,
+          "challenge": 10,
+          "mistakes": 10,
+          "before_after": 10
+        },
+        "sample_ideas": [
+          "Tired of dealing with dog hair spray Try this instead",
+          "Stop struggling with dog hair spray forever",
+          "The dog hair spray problem solved in 30 seconds",
+          "How dog hair spray fixes your biggest annoyance",
+          "Never deal with dog hair spray again use this hack",
+          "This dog hair spray solves what nothing else could",
+          "What dog hair spray did to my dogs fur was shocking",
+          "Watch dog hair spray transform this completely",
+          "I used dog hair spray for 7 days and here is what changed",
+          "The dog hair spray glow up nobody asked for"
+        ],
+        "sources_confirmed": 1,
+        "sources_checked": 1
+      },
+      "error": null
+    },
+    "supplier": {
+      "score": 8.67,
+      "max_score": 10.0,
+      "confidence": 0.83,
+      "details": {
+        "supplier_rating": 5,
+        "order_count": 4,
+        "years_active": 4,
+        "supplier_quality": "good",
+        "sources_confirmed": 1,
+        "sources_checked": 1
+      },
+      "error": null
+    },
+    "reviews": {
+      "score": 2.33,
+      "max_score": 3.0,
+      "confidence": 0.79,
+      "details": {
+        "review_count_score": 3,
+        "average_rating_score": 2,
+        "recent_reviews_score": 2,
+        "review_quality": "good",
+        "sources_confirmed": 1,
+        "sources_checked": 1
+      },
+      "error": null
+    },
+    "logistics": {
+      "score": 0.67,
+      "max_score": 2.0,
+      "confidence": 0.57,
+      "details": {
+        "shipping_time": 0,
+        "tracking_availability": 1,
+        "warehouse_location": 1,
+        "logistics_quality": "average",
+        "sources_confirmed": 1,
+        "sources_checked": 1
+      },
+      "error": null
+    }
+  }
+}

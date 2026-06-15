@@ -1,0 +1,212 @@
+{
+  "product_name": "Dog Hair Remover",
+  "product_score": 88.1,
+  "confidence_score": 100.0,
+  "survival_probability": 84.4,
+  "decision": "Buy",
+  "summary": "BUY - Score: 88/100 | Strengths: trend, demand, margin, seasonality, competition, content, supplier, logistics | Weaknesses: reviews",
+  "generated_at": "2026-06-05T16:27:37.404967",
+  "health": {
+    "providers": [
+      {
+        "name": "Google Trends",
+        "priority": 1,
+        "status": "working",
+        "error": null
+      },
+      {
+        "name": "Reddit",
+        "priority": 1,
+        "status": "working",
+        "error": null
+      },
+      {
+        "name": "Google Search",
+        "priority": 1,
+        "status": "working",
+        "error": null
+      },
+      {
+        "name": "Amazon",
+        "priority": 2,
+        "status": "disabled",
+        "error": "Amazon provider unavailable: no SerpAPI or PAAPI keys configured"
+      }
+    ],
+    "real_data_coverage": 100.0,
+    "trust_level": "High"
+  },
+  "engine_scores": {
+    "trend": {
+      "score": 14.71,
+      "max_score": 20.0,
+      "confidence": 0.57,
+      "details": {
+        "seven_day_avg": 45.29,
+        "thirty_day_avg": 31.9,
+        "ninety_day_avg": 18.16,
+        "one_eighty_day_avg": 14.91,
+        "direction": "rising",
+        "momentum": 1.4191,
+        "stability": 0.5691,
+        "sources_confirmed": 1,
+        "sources_checked": 1,
+        "data_source": "google_trends_provider"
+      },
+      "error": null
+    },
+    "demand": {
+      "score": 20.0,
+      "max_score": 20.0,
+      "confidence": 0.9,
+      "details": {
+        "google_trends": true,
+        "reddit": true,
+        "search": true,
+        "heuristic": true,
+        "confirmed_sources": 4,
+        "total_sources": 4,
+        "sources_confirmed": 4,
+        "sources_checked": 4,
+        "data_source": "providers"
+      },
+      "error": null
+    },
+    "margin": {
+      "score": 12.0,
+      "max_score": 15.0,
+      "confidence": 0.79,
+      "details": {
+        "cost": 8.0,
+        "price": 35.0,
+        "profit": 27.0,
+        "margin_percent": 77.14,
+        "roi_percent": 337.5,
+        "min_margin_threshold": 60.0,
+        "meets_threshold": true,
+        "sources_confirmed": 1,
+        "sources_checked": 1
+      },
+      "error": null
+    },
+    "seasonality": {
+      "score": 10.0,
+      "max_score": 10.0,
+      "confidence": 0.9,
+      "details": {
+        "product_type": "evergreen",
+        "explanation": "Year-round demand, consistent sales potential",
+        "sources_confirmed": 1,
+        "sources_checked": 1
+      },
+      "error": null
+    },
+    "intent": {
+      "score": 5.0,
+      "max_score": 10.0,
+      "confidence": 0.6,
+      "details": {
+        "high_intent_keywords_found": 0,
+        "keywords_matched": [],
+        "intent_level": "medium intent",
+        "sources_confirmed": 1,
+        "sources_checked": 1
+      },
+      "error": null
+    },
+    "competition": {
+      "score": 10.0,
+      "max_score": 10.0,
+      "confidence": 0.85,
+      "details": {
+        "estimated_competitor_count": 20,
+        "marketplace_saturation": "low",
+        "competition_level": "low competition",
+        "has_amazon_listings": true,
+        "sources_confirmed": 1,
+        "sources_checked": 1,
+        "data_source": "search_provider"
+      },
+      "error": null
+    },
+    "content": {
+      "score": 5.0,
+      "max_score": 5.0,
+      "confidence": 0.9,
+      "details": {
+        "unique_ideas": 80,
+        "duplicate_ideas": 0,
+        "diversity_score": 1.0,
+        "categories_covered": 8,
+        "total_categories": 8,
+        "category_breakdown": {
+          "problem_solving": 10,
+          "transformation": 10,
+          "comparison": 10,
+          "tutorial": 10,
+          "reaction": 10,
+          "challenge": 10,
+          "mistakes": 10,
+          "before_after": 10
+        },
+        "sample_ideas": [
+          "Tired of dealing with dog hair remover Try this instead",
+          "Stop struggling with dog hair remover forever",
+          "The dog hair remover problem solved in 30 seconds",
+          "How dog hair remover fixes your biggest annoyance",
+          "Never deal with dog hair remover again use this hack",
+          "This Dog Hair Remover solves what nothing else could",
+          "The real reason your dog hair remover isnt working and how to fix it",
+          "One simple trick to fix dog hair remover permanently",
+          "Why everyone with dog hair remover needs this solution",
+          "Stop wasting time on dog hair remover do this instead"
+        ],
+        "sources_confirmed": 1,
+        "sources_checked": 1
+      },
+      "error": null
+    },
+    "supplier": {
+      "score": 8.67,
+      "max_score": 10.0,
+      "confidence": 0.83,
+      "details": {
+        "supplier_rating": 4,
+        "order_count": 5,
+        "years_active": 4,
+        "supplier_quality": "good",
+        "sources_confirmed": 1,
+        "sources_checked": 1
+      },
+      "error": null
+    },
+    "reviews": {
+      "score": 1.0,
+      "max_score": 3.0,
+      "confidence": 0.2,
+      "details": {
+        "review_quality": "unknown",
+        "avg_rating": 0,
+        "total_reviews": 0,
+        "data_source": "no_data",
+        "sources_confirmed": 0,
+        "sources_checked": 1
+      },
+      "error": null
+    },
+    "logistics": {
+      "score": 1.67,
+      "max_score": 2.0,
+      "confidence": 0.82,
+      "details": {
+        "shipping_time": 2,
+        "tracking_availability": 1,
+        "warehouse_location": 2,
+        "logistics_quality": "excellent",
+        "sources_confirmed": 1,
+        "sources_checked": 1
+      },
+      "error": null
+    }
+  }
+}
